@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import "./App.css";
 
 interface User {
   id: number;
