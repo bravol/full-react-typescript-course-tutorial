@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { ReactNode } from "react";
 
-type Props = {};
+type Props = {
+  setCount: React.Dispatch<React.SetStateAction<number>>;
+  children: ReactNode;
+};
 
-const Counter = (props: Props) => {
-  const [count, setCount] = useState<number | null>(0);
-  return <div>Counter</div>;
+const Counter = ({ setCount, children }: Props) => {
+  return (
+    <div>
+      <h1>{children}</h1>
+      <button onClick={() => setCount((prev) => prev + 1)}>+</button>
+      <button onClick={() => setCount((prev) => prev - 1)}>_</button>
+    </div>
+  );
 };
 
 export default Counter;
