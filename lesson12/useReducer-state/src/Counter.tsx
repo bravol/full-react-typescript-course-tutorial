@@ -17,10 +17,7 @@ type ReducerAction = {
   payload?: string;
 };
 
-const reducer = (
-  state: typeof initState,
-  action: ReducerAction
-): typeof initState => {
+const reducer = (state: typeof initState, action: ReducerAction) => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.INCREMENT:
       return { ...state, count: state.count + 1 };
