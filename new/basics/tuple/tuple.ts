@@ -17,3 +17,10 @@ const sprite: Drink = ["clear", 100, true];
 const tea: Drink = ["brown", 300, false];
 //array
 // const pepsi2: (string | number | boolean)[] = ["red", 100, true];
+
+//why we are not going to use tuple
+const carSpecs: [number, number] = [400, 3354];
+const carStats = {
+  horsepower: 400,
+  weight: 3354,
+};
