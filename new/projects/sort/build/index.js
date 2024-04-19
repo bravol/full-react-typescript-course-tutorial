@@ -57,6 +57,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // sorter.sort();
 // console.log(sorter.collection);
 const CharactersCollection_1 = require("./CharactersCollection");
+const LinkedList_1 = require("./LinkedList");
 const NumbersCollection_1 = require("./NumbersCollection");
 const Sorter_1 = require("./Sorter");
 //sorting array of the numbers
@@ -69,3 +70,12 @@ const charactersCollection = new CharactersCollection_1.CharactersCollection("he
 const sorter1 = new Sorter_1.Sorter(charactersCollection);
 sorter1.sort();
 console.log(charactersCollection.data);
+//sorting linked lists
+const linkedList = new LinkedList_1.LinkedList();
+linkedList.add(500);
+linkedList.add(-10);
+linkedList.add(-3);
+linkedList.add(4);
+const sorter2 = new Sorter_1.Sorter(linkedList);
+sorter2.sort();
+linkedList.print();
