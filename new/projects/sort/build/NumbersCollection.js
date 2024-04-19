@@ -1,14 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NumbersCollection = void 0;
-class NumbersCollection {
+const Sorter_1 = require("./Sorter");
+class NumbersCollection extends Sorter_1.Sorter {
     // data: number[];
     // constructor(data: number[]){
     //     this.data=data
     // }
     //or
     constructor(data) {
-        this.data = data;
+        // this.data = data;
+        super();
         this.data = data;
     }
     compare(leftIndex, rightIndex) {

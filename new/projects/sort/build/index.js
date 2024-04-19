@@ -59,16 +59,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CharactersCollection_1 = require("./CharactersCollection");
 const LinkedList_1 = require("./LinkedList");
 const NumbersCollection_1 = require("./NumbersCollection");
-const Sorter_1 = require("./Sorter");
+// //sorting array of the numbers
+// const numbersCollection = new NumbersCollection([10, 3, -5, 0]);
+// const sorter = new Sorter(numbersCollection);
+// sorter.sort();
+// console.log(numbersCollection.data);
+// //sorting string
+// const charactersCollection = new CharactersCollection("hello");
+// const sorter1 = new Sorter(charactersCollection);
+// sorter1.sort();
+// console.log(charactersCollection.data);
+// //sorting linked lists
+// const linkedList = new LinkedList();
+// linkedList.add(500);
+// linkedList.add(-10);
+// linkedList.add(-3);
+// linkedList.add(4);
+// const sorter2 = new Sorter(linkedList);
+// sorter2.sort();
+// linkedList.print();
+//AFTER MAKING SORTER ABSTRACT
+//when using absctract, you do not use interfaces
 //sorting array of the numbers
 const numbersCollection = new NumbersCollection_1.NumbersCollection([10, 3, -5, 0]);
-const sorter = new Sorter_1.Sorter(numbersCollection);
-sorter.sort();
+numbersCollection.sort();
 console.log(numbersCollection.data);
 //sorting string
 const charactersCollection = new CharactersCollection_1.CharactersCollection("hello");
-const sorter1 = new Sorter_1.Sorter(charactersCollection);
-sorter1.sort();
+charactersCollection.sort();
 console.log(charactersCollection.data);
 //sorting linked lists
 const linkedList = new LinkedList_1.LinkedList();
@@ -76,6 +94,5 @@ linkedList.add(500);
 linkedList.add(-10);
 linkedList.add(-3);
 linkedList.add(4);
-const sorter2 = new Sorter_1.Sorter(linkedList);
-sorter2.sort();
+linkedList.sort();
 linkedList.print();

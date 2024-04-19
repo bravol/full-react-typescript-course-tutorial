@@ -67,18 +67,41 @@
 import { CharactersCollection } from "./CharactersCollection";
 import { LinkedList } from "./LinkedList";
 import { NumbersCollection } from "./NumbersCollection";
-import { Sorter } from "./Sorter";
+
+// //sorting array of the numbers
+// const numbersCollection = new NumbersCollection([10, 3, -5, 0]);
+// const sorter = new Sorter(numbersCollection);
+// sorter.sort();
+// console.log(numbersCollection.data);
+
+// //sorting string
+// const charactersCollection = new CharactersCollection("hello");
+// const sorter1 = new Sorter(charactersCollection);
+// sorter1.sort();
+// console.log(charactersCollection.data);
+
+// //sorting linked lists
+// const linkedList = new LinkedList();
+// linkedList.add(500);
+// linkedList.add(-10);
+// linkedList.add(-3);
+// linkedList.add(4);
+
+// const sorter2 = new Sorter(linkedList);
+// sorter2.sort();
+// linkedList.print();
+
+//AFTER MAKING SORTER ABSTRACT
+//when using absctract, you do not use interfaces
 
 //sorting array of the numbers
 const numbersCollection = new NumbersCollection([10, 3, -5, 0]);
-const sorter = new Sorter(numbersCollection);
-sorter.sort();
+numbersCollection.sort();
 console.log(numbersCollection.data);
 
 //sorting string
 const charactersCollection = new CharactersCollection("hello");
-const sorter1 = new Sorter(charactersCollection);
-sorter1.sort();
+charactersCollection.sort();
 console.log(charactersCollection.data);
 
 //sorting linked lists
@@ -88,6 +111,5 @@ linkedList.add(-10);
 linkedList.add(-3);
 linkedList.add(4);
 
-const sorter2 = new Sorter(linkedList);
-sorter2.sort();
+linkedList.sort();
 linkedList.print();
