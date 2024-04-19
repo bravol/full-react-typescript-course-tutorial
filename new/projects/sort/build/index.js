@@ -59,10 +59,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CharactersCollection_1 = require("./CharactersCollection");
 const NumbersCollection_1 = require("./NumbersCollection");
 const Sorter_1 = require("./Sorter");
+//sorting array of the numbers
 const numbersCollection = new NumbersCollection_1.NumbersCollection([10, 3, -5, 0]);
-const charactersCollection = new CharactersCollection_1.CharactersCollection("hello");
-// const sorter = new Sorter(numbersCollection);
-const sorter = new Sorter_1.Sorter(charactersCollection);
+const sorter = new Sorter_1.Sorter(numbersCollection);
 sorter.sort();
-// console.log(numbersCollection.data);
+console.log(numbersCollection.data);
+//sorting string
+const charactersCollection = new CharactersCollection_1.CharactersCollection("hello");
+const sorter1 = new Sorter_1.Sorter(charactersCollection);
+sorter1.sort();
 console.log(charactersCollection.data);

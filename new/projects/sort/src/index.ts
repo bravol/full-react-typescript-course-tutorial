@@ -68,10 +68,14 @@ import { CharactersCollection } from "./CharactersCollection";
 import { NumbersCollection } from "./NumbersCollection";
 import { Sorter } from "./Sorter";
 
+//sorting array of the numbers
 const numbersCollection = new NumbersCollection([10, 3, -5, 0]);
-const charactersCollection = new CharactersCollection("hello");
-// const sorter = new Sorter(numbersCollection);
-const sorter = new Sorter(charactersCollection);
+const sorter = new Sorter(numbersCollection);
 sorter.sort();
-// console.log(numbersCollection.data);
+console.log(numbersCollection.data);
+
+//sorting string
+const charactersCollection = new CharactersCollection("hello");
+const sorter1 = new Sorter(charactersCollection);
+sorter1.sort();
 console.log(charactersCollection.data);
