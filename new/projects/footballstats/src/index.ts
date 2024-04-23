@@ -51,19 +51,14 @@
 // console.log(` Man United wins ${manUnitedWins} games`);
 
 //ADVANCED
-import { CsvFileReader } from "./CsvFileReader";
+import { MatchReader } from "./MatchReader";
 import { MatchResult } from "./MatchResult";
 
-const reader = new CsvFileReader("football.csv");
+// const reader = new CsvFileReader("football.csv");
+const reader = new MatchReader("football.csv");
 reader.read();
 
 let manUnitedWins = 0;
-
-// enum MatchResult {
-//   HomeWin = "H",
-//   AwayWin = "A",
-//   Draw = "D",
-// }
 
 for (let match of reader.data) {
   if (match[1] === "Man United" && match[5] === MatchResult.HomeWin) {
