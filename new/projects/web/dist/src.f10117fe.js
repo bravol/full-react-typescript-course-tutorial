@@ -120,6 +120,15 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
+var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -127,12 +136,19 @@ exports.User = void 0;
 var User = /** @class */function () {
   function User(data) {
     this.data = data;
+    this.events = {};
   }
+  //get a particular data
   User.prototype.get = function (propName) {
     return this.data[propName];
   };
+  //update
   User.prototype.set = function (update) {
     Object.assign(this.data, update);
+  };
+  //listener to notify that data has been changed
+  User.prototype.on = function (eventName, callback) {
+    this.events[eventName] = __spreadArray(__spreadArray([], this.events[eventName] || [], true), [callback], false);
   };
   return User;
 }();
