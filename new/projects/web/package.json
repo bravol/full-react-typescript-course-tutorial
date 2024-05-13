@@ -10,6 +10,7 @@
     "abortcontroller-polyfill": "^1.7.5",
     "ansi-styles": "^4.3.0",
     "argparse": "^2.0.1",
+    "axios": "^1.6.8",
     "base-x": "^3.0.9",
     "boolbase": "^1.0.0",
     "braces": "^3.0.2",
@@ -22,6 +23,7 @@
     "color-convert": "^2.0.1",
     "color-name": "^1.1.4",
     "commander": "^7.2.0",
+    "concurrently": "^8.2.2",
     "cosmiconfig": "^9.0.0",
     "css-select": "^5.1.0",
     "css-tree": "^2.3.1",
@@ -67,6 +69,7 @@
     "node-addon-api": "^7.1.0",
     "node-gyp-build-optional-packages": "^5.1.1",
     "node-releases": "^2.0.14",
+    "nodemon": "^3.1.0",
     "nth-check": "^2.1.1",
     "nullthrows": "^1.1.1",
     "ordered-binary": "^1.5.1",
@@ -100,7 +103,11 @@
     "weak-lru-cache": "^1.2.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/index.js",
+    "start": "concurrently npm:start:*",
+    "start:db": "json-server -w db.json",
+    "start:parcel": "parcel index.html"
   },
   "keywords": [],
   "author": "",

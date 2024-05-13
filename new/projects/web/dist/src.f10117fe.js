@@ -120,15 +120,6 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
-var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
-  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-    if (ar || !(i in from)) {
-      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-      ar[i] = from[i];
-    }
-  }
-  return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -148,7 +139,18 @@ var User = /** @class */function () {
   };
   //listener to notify that data has been changed
   User.prototype.on = function (eventName, callback) {
-    this.events[eventName] = __spreadArray(__spreadArray([], this.events[eventName] || [], true), [callback], false);
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+  User.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+    handlers.forEach(function (callback) {
+      callback();
+    });
   };
   return User;
 }();
@@ -169,6 +171,15 @@ user.set({
 });
 console.log(user.get("name"));
 console.log(user.get("age"));
+user.on("change", function () {
+  console.log("Change #1");
+});
+user.on("save", function () {
+  console.log("save was triggered");
+});
+// console.log(user);
+user.trigger("change");
+user.trigger("save");
 },{"./models/User":"src/models/User.ts"}],"../../../../../../.nvm/versions/node/v16.20.2/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -194,7 +205,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49623" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60464" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
