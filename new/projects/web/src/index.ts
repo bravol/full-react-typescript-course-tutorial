@@ -35,3 +35,7 @@ setTimeout(() => {
 user.set({ name: "new name", age: 21 });
 user.save();
 user2.save();
+user.events.on("change", () => {
+  console.log("change!");
+});
+user.events.trigger("change");
