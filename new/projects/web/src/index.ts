@@ -1,41 +1,28 @@
-// import { User } from "./models/User";
-
-// const user = new User({ name: "brian", age: 30 });
-// user.set({ name: "bravol" });
-// console.log(user.get("name"));
-// console.log(user.get("age"));
-
-// user.on("change", () => {
-//   console.log("Change #1");
-// });
-// user.on("save", () => {
-//   console.log("save was triggered");
-// });
-// // console.log(user);
-// user.trigger("change");
-// user.trigger("save");
-
-import axios from "axios";
 import { User } from "./models/User";
 
-// // axios.post("http://localhost:3000/users", {
-// //   name: "bravol",
-// //   age: 20,
-// // });
-// axios.get("http://localhost:3000/users/1");
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+//   get fullName(): string {
+//     return `${this.firstName} ${this.lastName}`;
+//   }
+// }
+// const person = new Person("Lumala", "lastName");
+// console.log(person.fullName);
 
-const user = new User({ id: 1 });
-const user2 = new User({ name: "Lumala", age: 25 });
-user.fetch();
+//const user = new User({ name: "Lumala", age: 25 });
+// console.log(user.get("name"));
+// user.on("change", () => {
+//   console.log("User was changed, we probably need to update some HTML");
+// });
+// // user.trigger("change");
 
-setTimeout(() => {
-  console.log(user);
-}, 4000);
+// user.set({ name: "new name" });
 
-user.set({ name: "new name", age: 21 });
-user.save();
-user2.save();
-user.events.on("change", () => {
-  console.log("change!");
+const user2 = new User({ id: 1, name: "Newer name", age: 80 });
+user2.on("change", () => {
+  console.log(user2);
 });
-user.events.trigger("change");
+
+// user2.fetch();
+
+user2.save();

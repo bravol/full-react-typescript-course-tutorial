@@ -127,23 +127,24 @@ Object.defineProperty(exports, "__esModule", {
 exports.Eventing = void 0;
 var Eventing = /** @class */function () {
   function Eventing() {
+    var _this = this;
     this.events = {};
+    //listener to notify that data has been changed
+    this.on = function (eventName, callback) {
+      var handlers = _this.events[eventName] || [];
+      handlers.push(callback);
+      _this.events[eventName] = handlers;
+    };
+    this.trigger = function (eventName) {
+      var handlers = _this.events[eventName];
+      if (!handlers || handlers.length === 0) {
+        return;
+      }
+      handlers.forEach(function (callback) {
+        callback();
+      });
+    };
   }
-  //listener to notify that data has been changed
-  Eventing.prototype.on = function (eventName, callback) {
-    var handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  };
-  Eventing.prototype.trigger = function (eventName) {
-    var handlers = this.events[eventName];
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
-    handlers.forEach(function (callback) {
-      callback();
-    });
-  };
   return Eventing;
 }();
 exports.Eventing = Eventing;
@@ -5497,7 +5498,33 @@ var Sync = /** @class */function () {
   return Sync;
 }();
 exports.Sync = Sync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js"}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0;
+var Attributes = /** @class */function () {
+  function Attributes(data) {
+    var _this = this;
+    this.data = data;
+    //get a particular data
+    this.get = function (key) {
+      return _this.data[key];
+    };
+  }
+  //update
+  Attributes.prototype.set = function (update) {
+    Object.assign(this.data, update);
+  };
+  Attributes.prototype.getAll = function () {
+    return this.data;
+  };
+  return Attributes;
+}();
+exports.Attributes = Attributes;
+},{}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5506,49 +5533,96 @@ Object.defineProperty(exports, "__esModule", {
 exports.User = void 0;
 var Eventing_1 = require("./Eventing");
 var Sync_1 = require("./Sync");
+var Attributes_1 = require("./Attributes");
 var rootUrl = "http://localhost:3000/users";
 var User = /** @class */function () {
-  function User() {
+  function User(attrs) {
     this.events = new Eventing_1.Eventing();
     this.sync = new Sync_1.Sync(rootUrl);
+    this.attributes = new Attributes_1.Attributes(attrs);
   }
+  Object.defineProperty(User.prototype, "on", {
+    //reinplementing the methods
+    get: function get() {
+      return this.events.on; // not calling a function but a reference
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(User.prototype, "trigger", {
+    get: function get() {
+      return this.events.trigger;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(User.prototype, "get", {
+    get: function get() {
+      return this.attributes.get;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  //set
+  User.prototype.set = function (update) {
+    this.attributes.set(update);
+    this.events.trigger("change");
+  };
+  //fetch
+  User.prototype.fetch = function () {
+    var _this = this;
+    var id = this.get("id");
+    if (typeof id !== "number") {
+      throw new Error("Cannot fetch without an id");
+    }
+    this.sync.fetch(id).then(function (response) {
+      _this.set(response.data);
+    });
+  };
+  //save
+  User.prototype.save = function () {
+    var _this = this;
+    this.sync.save(this.attributes.getAll()).then(function (response) {
+      _this.trigger("Data saved");
+    }).catch(function () {
+      _this.trigger("Error occured");
+    });
+  };
   return User;
 }();
 exports.User = User;
-},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts","./Attributes":"src/models/Attributes.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
-// import { User } from "./models/User";
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var User_1 = require("./models/User");
-// // axios.post("http://localhost:3000/users", {
-// //   name: "bravol",
-// //   age: 20,
-// // });
-// axios.get("http://localhost:3000/users/1");
-var user = new User_1.User({
-  id: 1
-});
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+//   get fullName(): string {
+//     return `${this.firstName} ${this.lastName}`;
+//   }
+// }
+// const person = new Person("Lumala", "lastName");
+// console.log(person.fullName);
+//const user = new User({ name: "Lumala", age: 25 });
+// console.log(user.get("name"));
+// user.on("change", () => {
+//   console.log("User was changed, we probably need to update some HTML");
+// });
+// // user.trigger("change");
+// user.set({ name: "new name" });
 var user2 = new User_1.User({
-  name: "Lumala",
-  age: 25
+  id: 1,
+  name: "Newer name",
+  age: 80
 });
-user.fetch();
-setTimeout(function () {
-  console.log(user);
-}, 4000);
-user.set({
-  name: "new name",
-  age: 21
+user2.on("change", function () {
+  console.log(user2);
 });
-user.save();
+// user2.fetch();
 user2.save();
-user.events.on("change", function () {
-  console.log("change!");
-});
-user.events.trigger("change");
 },{"./models/User":"src/models/User.ts"}],"../../../../../../.nvm/versions/node/v16.20.2/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -5574,7 +5648,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54917" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49925" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
