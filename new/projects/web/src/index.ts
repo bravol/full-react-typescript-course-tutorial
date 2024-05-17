@@ -1,5 +1,6 @@
 import { Collection } from "./models/Collection";
 import { User, UserProps } from "./models/User";
+import { UserForm } from "./views/UserForm";
 
 // class Person {
 //   constructor(public firstName: string, public lastName: string) {}
@@ -50,8 +51,11 @@ import { User, UserProps } from "./models/User";
 // });
 // collection.fetch();
 
-const collection = User.buildUserCollection();
-collection.on("change", () => {
-  console.log(collection);
-});
-collection.fetch();
+// const collection = User.buildUserCollection();
+// collection.on("change", () => {
+//   console.log(collection);
+// });
+// collection.fetch();
+const user = User.buildUser({ age: 23, id: 2, name: "Liz" });
+const userForm = new UserForm(document.getElementById("root"), user);
+userForm.render();
