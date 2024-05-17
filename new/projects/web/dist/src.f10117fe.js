@@ -5574,12 +5574,19 @@ exports.Collection = Collection;
 },{"axios":"node_modules/axios/index.js","./Eventing":"src/models/Eventing.ts"}],"src/models/Model.ts":[function(require,module,exports) {
 "use strict";
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Model = void 0;
-var Model = /** @class */function () {
+var Model = /*#__PURE__*/function () {
   function Model(attributes, events, sync) {
+    _classCallCheck(this, Model);
     this.attributes = attributes;
     this.events = events;
     this.sync = sync;
@@ -5589,31 +5596,37 @@ var Model = /** @class */function () {
     this.get = this.attributes.get;
   }
   //set
-  Model.prototype.set = function (update) {
-    this.attributes.set(update);
-    this.events.trigger("change");
-  };
-  //fetch
-  Model.prototype.fetch = function () {
-    var _this = this;
-    var id = this.get("id");
-    if (typeof id !== "number") {
-      throw new Error("Cannot fetch without an id");
+  return _createClass(Model, [{
+    key: "set",
+    value: function set(update) {
+      this.attributes.set(update);
+      this.events.trigger("change");
     }
-    this.sync.fetch(id).then(function (response) {
-      _this.set(response.data);
-    });
-  };
-  //save
-  Model.prototype.save = function () {
-    var _this = this;
-    this.sync.save(this.attributes.getAll()).then(function (response) {
-      _this.trigger("Data saved");
-    }).catch(function () {
-      _this.trigger("Error occured");
-    });
-  };
-  return Model;
+    //fetch
+  }, {
+    key: "fetch",
+    value: function fetch() {
+      var _this = this;
+      var id = this.get("id");
+      if (typeof id !== "number") {
+        throw new Error("Cannot fetch without an id");
+      }
+      this.sync.fetch(id).then(function (response) {
+        _this.set(response.data);
+      });
+    }
+    //save
+  }, {
+    key: "save",
+    value: function save() {
+      var _this2 = this;
+      this.sync.save(this.attributes.getAll()).then(function (response) {
+        _this2.trigger("Data saved");
+      }).catch(function () {
+        _this2.trigger("Error occured");
+      });
+    }
+  }]);
 }();
 exports.Model = Model;
 // get get() {
@@ -5698,9 +5711,20 @@ var View = /*#__PURE__*/function () {
     _classCallCheck(this, View);
     this.parent = parent;
     this.model = model;
+    this.regions = {};
     this.bindModel();
   }
   return _createClass(View, [{
+    key: "regionsMap",
+    value: function regionsMap() {
+      return {};
+    }
+  }, {
+    key: "eventsMap",
+    value: function eventsMap() {
+      return {};
+    }
+  }, {
     key: "bindModel",
     value: function bindModel() {
       var _this = this;
@@ -5726,12 +5750,29 @@ var View = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "mapRegions",
+    value: function mapRegions(fragment) {
+      var regionsMap = this.regionsMap();
+      for (var key in regionsMap) {
+        var selector = regionsMap[key];
+        var element = fragment.querySelector(selector);
+        if (element) {
+          this.regions[key] = element;
+        }
+      }
+    }
+  }, {
+    key: "onRender",
+    value: function onRender() {}
+  }, {
     key: "render",
     value: function render() {
       this.parent.innerHTML = "";
       var templateElement = document.createElement("template");
       templateElement.innerHTML = this.template();
       this.bindEvents(templateElement.content);
+      this.mapRegions(templateElement.content);
+      this.onRender();
       this.parent.append(templateElement.content);
     }
   }]);
@@ -5777,6 +5818,9 @@ var UserForm = /*#__PURE__*/function (_View_1$View) {
         });
       }
     };
+    _this.onSaveClick = function () {
+      _this.model.save();
+    };
     return _this;
   }
   _inherits(UserForm, _View_1$View);
@@ -5785,26 +5829,114 @@ var UserForm = /*#__PURE__*/function (_View_1$View) {
     value: function eventsMap() {
       return {
         "click:.set-name": this.onSetNameClick,
-        "click:.set-age": this.onSetAgeClick
+        "click:.set-age": this.onSetAgeClick,
+        "click:.save-model": this.onSaveClick
         //   "mouseenter:h1": this.onHeaderHover,
       };
     }
   }, {
     key: "template",
     value: function template() {
-      return "\n        <div>\n          <h1>User Form</h1>\n          <div>User name:".concat(this.model.get("name"), " </div>\n          <div>User name:").concat(this.model.get("age"), " </div>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set Random Age</button>\n        </div>\n\n        ");
+      return "\n        <div>\n          <input placeholder=\"".concat(this.model.get("name"), "\" />\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set Random Age</button>\n          <button class=\"save-model\">Save User</button>\n        </div>\n\n        ");
     }
   }]);
 }(View_1.View);
 exports.UserForm = UserForm;
-},{"./View":"src/views/View.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./View":"src/views/View.ts"}],"src/views/UserShow.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserShow = void 0;
+var View_1 = require("./View");
+var UserShow = /*#__PURE__*/function (_View_1$View) {
+  function UserShow() {
+    _classCallCheck(this, UserShow);
+    return _callSuper(this, UserShow, arguments);
+  }
+  _inherits(UserShow, _View_1$View);
+  return _createClass(UserShow, [{
+    key: "template",
+    value: function template() {
+      return "\n    <div>\n      <h1>User Details</h1>\n      <div>User Name: ".concat(this.model.get("name"), "</div>\n      <div>User Name: ").concat(this.model.get("age"), "</div>\n    </div>\n    ");
+    }
+  }]);
+}(View_1.View);
+exports.UserShow = UserShow;
+},{"./View":"src/views/View.ts"}],"src/views/UserEdit.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserEdit = void 0;
+var UserForm_1 = require("./UserForm");
+var UserShow_1 = require("./UserShow");
+var View_1 = require("./View");
+var UserEdit = /*#__PURE__*/function (_View_1$View) {
+  function UserEdit() {
+    _classCallCheck(this, UserEdit);
+    return _callSuper(this, UserEdit, arguments);
+  }
+  _inherits(UserEdit, _View_1$View);
+  return _createClass(UserEdit, [{
+    key: "regionsMap",
+    value: function regionsMap() {
+      return {
+        userShow: ".user-show",
+        userForm: ".user-form"
+      };
+    }
+  }, {
+    key: "onRender",
+    value: function onRender() {
+      //do our nesting
+      new UserShow_1.UserShow(this.regions.userShow, this.model).render();
+      new UserForm_1.UserForm(this.regions.userForm, this.model).render();
+    }
+  }, {
+    key: "template",
+    value: function template() {
+      return "\n        <div>\n           <div class=\"user-show\"></div>\n           <div class=\"user-form\"></div>\n        </div>\n        ";
+    }
+  }]);
+}(View_1.View);
+exports.UserEdit = UserEdit;
+},{"./UserForm":"src/views/UserForm.ts","./UserShow":"src/views/UserShow.ts","./View":"src/views/View.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var User_1 = require("./models/User");
-var UserForm_1 = require("./views/UserForm");
+var UserEdit_1 = require("./views/UserEdit");
 // class Person {
 //   constructor(public firstName: string, public lastName: string) {}
 //   get fullName(): string {
@@ -5849,6 +5981,14 @@ var UserForm_1 = require("./views/UserForm");
 //   console.log(collection);
 // });
 // collection.fetch();
+// const user = User.buildUser({ age: 23, id: 2, name: "Liz" });
+// const root = document.getElementById("root");
+// if (root) {
+//   const userForm = new UserForm(root, user);
+//   userForm.render();
+// } else {
+//   throw new Error("Root element not found");
+// }
 var user = User_1.User.buildUser({
   age: 23,
   id: 2,
@@ -5856,12 +5996,13 @@ var user = User_1.User.buildUser({
 });
 var root = document.getElementById("root");
 if (root) {
-  var userForm = new UserForm_1.UserForm(root, user);
-  userForm.render();
+  var userEdit = new UserEdit_1.UserEdit(root, user);
+  userEdit.render();
+  console.log(userEdit);
 } else {
   throw new Error("Root element not found");
 }
-},{"./models/User":"src/models/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../../../../.nvm/versions/node/v16.20.2/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./models/User":"src/models/User.ts","./views/UserEdit":"src/views/UserEdit.ts"}],"../../../../../../.nvm/versions/node/v16.20.2/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
