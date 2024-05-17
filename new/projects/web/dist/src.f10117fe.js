@@ -5674,7 +5674,7 @@ var User = /** @class */function (_super) {
   return User;
 }(Model_1.Model);
 exports.User = User;
-},{"./ApiSync":"src/models/ApiSync.ts","./Attributes":"src/models/Attributes.ts","./Collection":"src/models/Collection.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts"}],"src/views/UserForm.ts":[function(require,module,exports) {
+},{"./ApiSync":"src/models/ApiSync.ts","./Attributes":"src/models/Attributes.ts","./Collection":"src/models/Collection.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts"}],"src/views/View.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -5692,56 +5692,21 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserForm = void 0;
-var UserForm = /*#__PURE__*/function () {
-  function UserForm(parent, model) {
-    var _this = this;
-    _classCallCheck(this, UserForm);
+exports.View = void 0;
+var View = /*#__PURE__*/function () {
+  function View(parent, model) {
+    _classCallCheck(this, View);
     this.parent = parent;
     this.model = model;
-    //   onButtonClick(): void {
-    //     console.log("Hi there");
-    //   }
-    //   onHeaderHover(): void {
-    //     console.log("HI was hovered over");
-    //   }
-    this.onSetAgeClick = function () {
-      _this.model.setRandomAge();
-    };
-    //updating the name
-    this.onSetNameClick = function () {
-      var _a;
-      var input = (_a = _this.parent) === null || _a === void 0 ? void 0 : _a.querySelector("input");
-      if (input) {
-        var name = input.value;
-        _this.model.set({
-          name: name
-        });
-      }
-    };
     this.bindModel();
   }
-  return _createClass(UserForm, [{
+  return _createClass(View, [{
     key: "bindModel",
     value: function bindModel() {
-      var _this2 = this;
+      var _this = this;
       this.model.on("change", function () {
-        _this2.render();
+        _this.render();
       });
-    }
-  }, {
-    key: "eventsMap",
-    value: function eventsMap() {
-      return {
-        "click:.set-name": this.onSetNameClick,
-        "click:.set-age": this.onSetAgeClick
-        //   "mouseenter:h1": this.onHeaderHover,
-      };
-    }
-  }, {
-    key: "template",
-    value: function template() {
-      return "\n        <div>\n          <h1>User Form</h1>\n          <div>User name:".concat(this.model.get("name"), " </div>\n          <div>User name:").concat(this.model.get("age"), " </div>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set Random Age</button>\n        </div>\n\n        ");
     }
   }, {
     key: "bindEvents",
@@ -5771,8 +5736,68 @@ var UserForm = /*#__PURE__*/function () {
     }
   }]);
 }();
+exports.View = View;
+},{}],"src/views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+var View_1 = require("./View");
+var UserForm = /*#__PURE__*/function (_View_1$View) {
+  function UserForm() {
+    var _this;
+    _classCallCheck(this, UserForm);
+    _this = _callSuper(this, UserForm, arguments);
+    _this.onSetAgeClick = function () {
+      _this.model.setRandomAge();
+    };
+    //updating the name
+    _this.onSetNameClick = function () {
+      var _a;
+      var input = (_a = _this.parent) === null || _a === void 0 ? void 0 : _a.querySelector("input");
+      if (input) {
+        var name = input.value;
+        _this.model.set({
+          name: name
+        });
+      }
+    };
+    return _this;
+  }
+  _inherits(UserForm, _View_1$View);
+  return _createClass(UserForm, [{
+    key: "eventsMap",
+    value: function eventsMap() {
+      return {
+        "click:.set-name": this.onSetNameClick,
+        "click:.set-age": this.onSetAgeClick
+        //   "mouseenter:h1": this.onHeaderHover,
+      };
+    }
+  }, {
+    key: "template",
+    value: function template() {
+      return "\n        <div>\n          <h1>User Form</h1>\n          <div>User name:".concat(this.model.get("name"), " </div>\n          <div>User name:").concat(this.model.get("age"), " </div>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set Random Age</button>\n        </div>\n\n        ");
+    }
+  }]);
+}(View_1.View);
 exports.UserForm = UserForm;
-},{}],"src/index.ts":[function(require,module,exports) {
+},{"./View":"src/views/View.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
