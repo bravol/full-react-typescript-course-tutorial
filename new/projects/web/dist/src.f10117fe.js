@@ -5677,13 +5677,26 @@ exports.User = User;
 },{"./ApiSync":"src/models/ApiSync.ts","./Attributes":"src/models/Attributes.ts","./Collection":"src/models/Collection.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts"}],"src/views/UserForm.ts":[function(require,module,exports) {
 "use strict";
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.UserForm = void 0;
-var UserForm = /** @class */function () {
+var UserForm = /*#__PURE__*/function () {
   function UserForm(parent, model) {
     var _this = this;
+    _classCallCheck(this, UserForm);
     this.parent = parent;
     this.model = model;
     //   onButtonClick(): void {
@@ -5695,46 +5708,68 @@ var UserForm = /** @class */function () {
     this.onSetAgeClick = function () {
       _this.model.setRandomAge();
     };
+    //updating the name
+    this.onSetNameClick = function () {
+      var _a;
+      var input = (_a = _this.parent) === null || _a === void 0 ? void 0 : _a.querySelector("input");
+      if (input) {
+        var name = input.value;
+        _this.model.set({
+          name: name
+        });
+      }
+    };
     this.bindModel();
   }
-  UserForm.prototype.bindModel = function () {
-    var _this = this;
-    this.model.on("change", function () {
-      _this.render();
-    });
-  };
-  UserForm.prototype.eventsMap = function () {
-    return {
-      //   "click:button": this.onButtonClick,
-      "click:.set-age": this.onSetAgeClick
-      //   "mouseenter:h1": this.onHeaderHover,
-    };
-  };
-  UserForm.prototype.template = function () {
-    return "\n        <div>\n          <h1>User Form</h1>\n          <div>User name:".concat(this.model.get("name"), " </div>\n          <div>User name:").concat(this.model.get("age"), " </div>\n          <input/>\n          <button>Click Me</button>\n          <button class=\"set-age\">Set Random Age</button>\n        </div>\n\n        ");
-  };
-  UserForm.prototype.bindEvents = function (fragment) {
-    var eventsMap = this.eventsMap();
-    var _loop_1 = function _loop_1(eventKey) {
-      var _a = eventKey.split(":"),
-        eventName = _a[0],
-        selector = _a[1];
-      fragment.querySelectorAll(selector).forEach(function (element) {
-        element.addEventListener(eventName, eventsMap[eventKey]);
+  return _createClass(UserForm, [{
+    key: "bindModel",
+    value: function bindModel() {
+      var _this2 = this;
+      this.model.on("change", function () {
+        _this2.render();
       });
-    };
-    for (var eventKey in eventsMap) {
-      _loop_1(eventKey);
     }
-  };
-  UserForm.prototype.render = function () {
-    var _a;
-    var templateElement = document.createElement("template");
-    templateElement.innerHTML = this.template();
-    this.bindEvents(templateElement.content);
-    (_a = this.parent) === null || _a === void 0 ? void 0 : _a.append(templateElement.content);
-  };
-  return UserForm;
+  }, {
+    key: "eventsMap",
+    value: function eventsMap() {
+      return {
+        "click:.set-name": this.onSetNameClick,
+        "click:.set-age": this.onSetAgeClick
+        //   "mouseenter:h1": this.onHeaderHover,
+      };
+    }
+  }, {
+    key: "template",
+    value: function template() {
+      return "\n        <div>\n          <h1>User Form</h1>\n          <div>User name:".concat(this.model.get("name"), " </div>\n          <div>User name:").concat(this.model.get("age"), " </div>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set Random Age</button>\n        </div>\n\n        ");
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents(fragment) {
+      var eventsMap = this.eventsMap();
+      var _loop = function _loop(eventKey) {
+        var _eventKey$split = eventKey.split(":"),
+          _eventKey$split2 = _slicedToArray(_eventKey$split, 2),
+          eventName = _eventKey$split2[0],
+          selector = _eventKey$split2[1];
+        fragment.querySelectorAll(selector).forEach(function (element) {
+          element.addEventListener(eventName, eventsMap[eventKey]);
+        });
+      };
+      for (var eventKey in eventsMap) {
+        _loop(eventKey);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      this.parent.innerHTML = "";
+      var templateElement = document.createElement("template");
+      templateElement.innerHTML = this.template();
+      this.bindEvents(templateElement.content);
+      this.parent.append(templateElement.content);
+    }
+  }]);
 }();
 exports.UserForm = UserForm;
 },{}],"src/index.ts":[function(require,module,exports) {
@@ -5794,8 +5829,13 @@ var user = User_1.User.buildUser({
   id: 2,
   name: "Liz"
 });
-var userForm = new UserForm_1.UserForm(document.getElementById("root"), user);
-userForm.render();
+var root = document.getElementById("root");
+if (root) {
+  var userForm = new UserForm_1.UserForm(root, user);
+  userForm.render();
+} else {
+  throw new Error("Root element not found");
+}
 },{"./models/User":"src/models/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../../../../.nvm/versions/node/v16.20.2/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
