@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_1 = __importDefault(require("express"));
 const loginRoutes_1 = require("./routes/loginRoutes");
+const AppRouter_1 = require("./AppRouter");
 require("./controllers/LoginController");
-const controller_1 = require("./controllers/decorators/controller");
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(loginRoutes_1.router);
-app.use(controller_1.router);
-app.listen(3000, () => {
-    console.log("Listening on port 3000");
+app.use(AppRouter_1.AppRouter.getInstance());
+app.listen(3001, () => {
+    console.log("Listening on port 3001");
 });
