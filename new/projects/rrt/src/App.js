@@ -1,7 +1,16 @@
 function App() {
+  state = { counter: 0 };
+  increment = (): void => {
+    this.setState({ counter: this.state.counter + 1 });
+  };
+
+  decrement = (): void => {
+    this.setState({ counter: this.state.counter - 1 });
+  };
   return (
     <div>
-      <p>Hello</p>
+      <button onClick={this.increment}>Increment</button>
+      <button onClick={this.decrement}>Decrement</button>
     </div>
   );
 }
