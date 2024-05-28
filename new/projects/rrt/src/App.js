@@ -4,7 +4,7 @@ function App() {
     this.setState({ counter: this.state.counter + 1 });
   };
 
-  decrement = (): void => {
+  decrement = () => {
     this.setState({ counter: this.state.counter - 1 });
   };
   return (
